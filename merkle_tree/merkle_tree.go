@@ -54,6 +54,36 @@ func makeRoot(nodes []*MerkleNode) *MerkleNode {
 	return makeRoot(list)
 }
 
+func (t *MerkleTree) AddNode(data any) {
+	newNode := newMerkleNode(hasher.HashSHA256(data), nil, nil)
+	t.root = addNodeRecursively(t.root, newNode)
+}
+
+func addNodeRecursively(current *MerkleNode, newNode *MerkleNode) *MerkleNode {
+	if current == nil {
+		return newNode
+	}
+
+	if newNode.value.(string) < current.value.(string) {
+		current.left = addNodeRecursively(current.left, newNode)
+	} else {
+		current.right = addNodeRecursively(current.right, newNode)
+	}
+
+	var combinedHash string
+	if current.left != nil {
+		combinedHash = fmt.Sprint(current.left.value)
+	}
+
+	if current.right != nil {
+		combinedHash += fmt.Sprint(current.right.value)
+		combinedHash = hasher.HashSHA256(combinedHash)
+	}
+
+	current.value = combinedHash
+	return current
+}
+
 func (t *MerkleTree) PrettyPrint() {
 	t.printNode(t.root, 0)
 }

@@ -12,4 +12,13 @@ func main() {
 
 	testTrx := "123"
 	fmt.Printf("\nIs the transaction %s verified? %t", testTrx, m.Verify(testTrx))
+
+	testTrx = "555"
+	fmt.Printf("\nIs the transaction %s verified? %t", testTrx, m.Verify(testTrx))
+
+	m.AddNode(testTrx)
+	fmt.Println("\n\nPrint tree after added 555:")
+	m.PrettyPrint()
+
+	fmt.Printf("\nIs the transaction %s verified? %t", testTrx, m.Verify(testTrx))
 }
