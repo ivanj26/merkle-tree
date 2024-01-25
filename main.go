@@ -21,4 +21,7 @@ func main() {
 	m.PrettyPrint()
 
 	fmt.Printf("\nIs the transaction %s verified? %t", testTrx, m.Verify(testTrx))
+
+	// Check if merkle tree is still valid?
+	fmt.Printf("\nIs the merkle tree valid? %t", m.IsValid())
 }

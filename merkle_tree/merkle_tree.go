@@ -140,3 +140,29 @@ func findSiblingOf(hash string, node *MerkleNode) (*MerkleNode, bool) {
 	}
 	return sibling, isLeft
 }
+
+func (t *MerkleTree) IsValid() bool {
+	return t.isValidMerkleTree(t.root)
+}
+
+func (t *MerkleTree) isValidMerkleTree(node *MerkleNode) bool {
+	if node == nil {
+		return true
+	}
+
+	if node.left == nil && node.right == nil {
+		return true
+	}
+
+	var combinedHash string
+	if node.GetLeft() != nil {
+		combinedHash = node.GetLeft().GetValue().(string)
+	}
+
+	if node.GetRight() != nil {
+		combinedHash = fmt.Sprintf("%s%s", combinedHash, node.GetRight().GetValue().(string))
+		combinedHash = hasher.HashSHA256(combinedHash)
+	}
+
+	return combinedHash == node.GetValue().(string) && t.isValidMerkleTree(node.GetLeft()) && t.isValidMerkleTree(node.GetRight())
+}
